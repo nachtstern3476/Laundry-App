@@ -1,0 +1,21 @@
+<!-- Outlet Trigger -->
+DELIMITER $$
+CREATE TRIGGER `deleteRelation` AFTER DELETE ON `ldr_outlet`
+ FOR EACH ROW 
+BEGIN
+DELETE FROM `ldr_diskon` WHERE ldr_diskon.id_outlet = OLD.id_outlet;
+DELETE FROM `ldr_jenis` WHERE ldr_jenis.id_outlet = OLD.id_outlet;
+DELETE FROM `ldr_member` WHERE ldr_member.id_outlet = OLD.id_outlet;
+DELETE FROM `ldr_paket` WHERE ldr_paket.id_outlet = OLD.id_outlet;
+DELETE FROM `ldr_transaksi` WHERE ldr_transaksi.id_outlet = OLD.id_outlet;
+END $$
+DELIMITER ;
+
+<!-- Transaction Trigger -->
+DELIMITER $$
+CREATE TRIGGER `deleteTransactionDetail` AFTER DELETE ON `ldr_transaksi`
+ FOR EACH ROW 
+BEGIN
+DELETE FROM `ldr_detail_transaksi` WHERE ldr_detail_transaksi.id_transaksi = OLD.id_transaksi;
+END $$
+DELIMITER ;

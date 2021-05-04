@@ -1,0 +1,22 @@
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newTransaction`(IN `pIdOutlet` INT(11), IN `pIdMember` INT(11), IN `pIdUser` INT(11), IN `pKodeInvoice` VARCHAR(255), IN `pStatusBayar` ENUM('dibayar','belum_dibayar'), IN `pStatusPengerjaan` ENUM('baru','proses','selesai','diambil'), IN `pPajak` VARCHAR(11), IN `pDiskon` VARCHAR(11), IN `pTglBayar` DATETIME, IN `pTglAmbil` DATETIME, IN `pIdPaket` INT(11), IN `pHargaTotal` INT(11), IN `pJumlahBayar` INT(11), IN `pKembalian` INT(11), IN `pKeterangan` TEXT, IN `pQty` INT(11))
+BEGIN
+	DECLARE idTrans int(11);
+	INSERT INTO ldr_transaksi(id_outlet,id_member, id_user, kode_invoice, status_bayar, status_pengerjaan, pajak, diskon, tgl_bayar, tgl_ambil)
+    VALUES(pIdOutlet, pIdMember, pIdUser, pKodeInvoice, pStatusBayar, pStatusPengerjaan, pPajak, pDiskon, pTglBayar, pTglAmbil);
+    SET idTrans = LAST_INSERT_ID();
+    
+    INSERT INTO ldr_detail_transaksi(id_transaksi, id_paket, harga_total, qty, keterangan, jumlah_bayar, kembalian)
+    VALUES(idTrans, pIdPaket, pHargaTotal, pQty, pKeterangan,
+          pJumlahBayar, pKembalian);
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newMember`(IN `pNama` VARCHAR(255), IN `pAlamat` VARCHAR(255), IN `pTelp` VARCHAR(255), IN `pGender` ENUM('L','P'), OUT `idMember` INT(11), IN `pOutlet` INT(11))
+BEGIN
+    INSERT INTO ldr_member(id_outlet, nama, alamat, telp, gender) VALUES(id_outlet, pNama, pAlamat, pTelp, pGender);
+    SET idMember = LAST_INSERT_ID();
+    
+END$$
+DELIMITER ;
